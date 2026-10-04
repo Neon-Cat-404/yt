@@ -41,6 +41,7 @@ def create_job(request: JobRequest):
     try:
         command = [
             "yt-dlp",
+            "--js-runtimes", "deno",
             "--no-playlist",
             "-f",
             "bv*[height<=720]+ba/b[height<=720]",
