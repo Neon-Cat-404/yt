@@ -66,7 +66,7 @@ def create_job(request: JobRequest):
 
             raise HTTPException(
                 status_code=500,
-                detail="Download failed"
+                detail=result.stderr[-4000:]
             )
 
         output_file = DOWNLOAD_DIR / f"{job_id}.mp4"
