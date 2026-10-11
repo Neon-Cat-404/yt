@@ -48,8 +48,7 @@ def get_drive_service():
 
     if os.path.exists(TOKEN_FILE):
         credentials = Credentials.from_authorized_user_file(
-            TOKEN_FILE,
-            SCOPES
+            TOKEN_FILE, SCOPES
         )
 
     if credentials and credentials.expired and credentials.refresh_token:
@@ -65,7 +64,20 @@ def get_drive_service():
             SCOPES
         )
 
-        credentials = flow.run_local_server(port=0)
+        flow.redirect_uri = "urn:ietf:wg:oauth:2.0:oob"
+
+        authorization_url, _ = flow.authorization_url(
+            access_type="offline",
+            prompt="consent"
+        )
+
+        print("\nOpen this URL in your browser:\n")
+        print(authorization_url)
+
+        code = input("\nPaste the authorization code here: ").strip()
+
+        flow.fetch_token(code=code)
+        credentials = flow.credentials
 
         with open(TOKEN_FILE, "w") as token:
             token.write(credentials.to_json())
